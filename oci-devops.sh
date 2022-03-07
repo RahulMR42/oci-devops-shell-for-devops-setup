@@ -42,6 +42,11 @@ ColorBlue(){
 	echo -ne $blue$1$clear
 }
 
+list_projects(){
+    compartmentid=$1
+    
+}
+
 oci_prj_menu(){
 
     compartmentid=$1
