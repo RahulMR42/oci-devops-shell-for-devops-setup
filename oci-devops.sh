@@ -15,10 +15,11 @@ read -p "OCI Compartment OCID ?:" compartmentid
 
 echo "Here are the available OCI notification topics"
 
-oci ons topic list --compartment-id ${compartmentid} --all --output table --query "data[*].{Topic Name:name,ID:topic-id}"
+oci ons topic list --compartment-id ${compartmentid} --all --output table --query 'data[*].{Name:name,TopicID:"topic-id"}'
 
-read -p "OCI Notification Topic Name ?:" onstopicname
+read -p "OCI Notification TopicID ?:" onstopicid
 
 read -p "Devops Project Name ? [${OCIPROJECT}]: " prjname
 prjname=${prjname:-${OCIPROJECT}}
-echo $prjname
+
+oci devops project create --compartment-id ${compartmentid} --name ${prjname} --notification-config '{"topicId":"${onstopicid}"}' --description "Project ${prjname}"
