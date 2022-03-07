@@ -110,7 +110,7 @@ $(ColorBlue 'Choose an option:') "
 	        4) kernel_check ; menu ;;
 	        5) all_checks ; menu ;;
 		0) exit 0 ;;
-		*) echo -e $red"Wrong option."$clear; WrongCommand;;
+		*) echo -e "Invalid"
         esac
 }
 
