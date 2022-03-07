@@ -15,7 +15,9 @@ read -p "OCI Compartment OCID ?:" compartmentid
 
 echo "Here are the available OCI notification topics"
 
-oci ons topic list --compartment-id ${compartmentid} --all --output table --query "data[*].{Name:name,ID:id}"
+oci ons topic list --compartment-id ${compartmentid} --all --output table --query "data[*].{Topic Name:name,ID:topic-id}"
+
+read -p "OCI Notification Topic Name ?:" onstopicname
 
 read -p "Devops Project Name ? [${OCIPROJECT}]: " prjname
 prjname=${prjname:-${OCIPROJECT}}
