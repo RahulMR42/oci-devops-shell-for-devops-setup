@@ -44,7 +44,7 @@ ColorBlue(){
 
 list_projects(){
     compartmentid=$1
-    oci devops project --compartment-id ${compartmentid} --output table
+    oci devops project list --compartment-id ${compartmentid} --output table
 
 }
 
