@@ -67,4 +67,4 @@ $(ColorBlue 'Choose an option:') "
 echo "Here is the available compartments"
 oci iam compartment  list --query "data[*].{Name:name,ID:id}" --output table
 read -p "OCI Compartment OCID ?:" compartmentid
-main_menu(compartmentid)
+main_menu(${compartmentid})
