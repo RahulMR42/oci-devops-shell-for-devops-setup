@@ -4,7 +4,8 @@
 
 #Variables 
 
-uid=uuidgen|awk -F '-' '{print $(NF)}'
-echo "Proceeding with a unique id ${uid}"
-read -p "OCI Devops Project Name [devops-prj-${uid}]: " name
-echo $name
+UUID=`uuidgen|cut -f 4 -d '-'`
+OCIPROJECT="devops-prj-${UUID}"
+read -e -i "$OCIPROJECT" -p "Enter Project Name " input
+OCIPROJECT="${input:-$OCIPROJECT}"
+echo "${OCIPROJECT}"
