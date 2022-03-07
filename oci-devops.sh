@@ -22,4 +22,4 @@ read -p "OCI Notification TopicID ?:" onstopicid
 read -p "Devops Project Name ? [${OCIPROJECT}]: " prjname
 prjname=${prjname:-${OCIPROJECT}}
 
-oci devops project create --compartment-id ${compartmentid} --name ${prjname} --notification-config '{"topicId":'"${onstopicid}"'}' --description "Project ${prjname}"
+oci devops project create --compartment-id ${compartmentid} --name ${prjname} --notification-config '{"topicId":"'${onstopicid}'"}' --description "Project ${prjname}"
