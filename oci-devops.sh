@@ -46,7 +46,7 @@ ColorBlue(){
 	echo -ne $blue$1$clear
 }
 
-menu(){
+main_menu(){
 echo -ne "
 OCI Devops Quick menu
 $(ColorGreen '1)') devops project
@@ -56,17 +56,17 @@ $(ColorGreen '4)') policies & dynamic groups
 $(ColorGreen '5)') A CICD pipeline
 $(ColorGreen '0)') Exit
 $(ColorBlue 'Choose an option:') "
-        read a
-        case $a in
-	        1) oci_prj ; menu ;;
-	        2) oci_build ; menu ;;
-	        3) oci_deploy ; menu ;;
-	        4) oci_policies ; menu ;;
-	        5) all_checks ; menu ;;
+        read choice
+        case $choice in
+	        1) oci_prj ; main_menu ;;
+	        2) oci_build ; main_menu ;;
+	        3) oci_deploy ; main_menu ;;
+	        4) oci_policies ; main_menu ;;
+	        5) all_checks ; main_menu ;;
 		0) exit 0 ;;
 		*) echo -e "Invalid"
         esac
 }
 
 # Call the menu function
-menu
+main_menu
