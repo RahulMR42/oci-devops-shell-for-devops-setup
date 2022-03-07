@@ -42,6 +42,27 @@ ColorBlue(){
 	echo -ne $blue$1$clear
 }
 
+oci_prj_menu(){
+
+    compartmentid=$1
+    echo -ne "
+    OCI Devops PROJECT menu - Compartment ID : $1
+    $(ColorGreen '1)') List projects.
+    $(ColorGreen '2)') Create project.
+    $(ColorGreen '100)') Back to main.
+    $(ColorGreen '0)') exit.
+    $(ColorBlue 'Choose an option:') "
+            read choice
+            case $choice in
+                1) list_projects $compartmentid ; oci_prj_menu ;;
+                2) create_project $compartmentid;  oci_prj_menu;;
+                100) main_menu ;;
+            0) exit 0 ;;
+            *) echo -e "Invalid"
+            esac
+
+}
+
 main_menu(){
 echo "Here is the available compartments"
 oci iam compartment  list --query "data[*].{Name:name,ID:id}" --output table
@@ -58,7 +79,7 @@ $(ColorGreen '0)') Exit
 $(ColorBlue 'Choose an option:') "
         read choice
         case $choice in
-	        1) oci_prj ; main_menu ;;
+	        1) oci_prj_menu $compartmentid ; main_menu ;;
 	        2) oci_build ; main_menu ;;
 	        3) oci_deploy ; main_menu ;;
 	        4) oci_policies ; main_menu ;;
@@ -68,7 +89,4 @@ $(ColorBlue 'Choose an option:') "
         esac
 }
 
-echo "Here is the available compartments"
-oci iam compartment  list --query "data[*].{Name:name,ID:id}" --output table
-read -p "OCI Compartment OCID ?:" compartmentid
 main_menu 
