@@ -36,21 +36,34 @@ clear='\e[0m'
 ##
 
 ColorGreen(){
-	echo -ne $green$1$clear
+        echo -ne $green$1$clear
 }
 ColorBlue(){
-	echo -ne $blue$1$clear
+        echo -ne $blue$1$clear
 }
 
 list_projects(){
     compartmentid=$1
-    oci devops project list --compartment-id ${compartmentid} --output table
+    oci devops project list --compartment-id $compartmentid --all --query 'data.items' --output table
+
+}
+
+create_project(){
+    compartmentid=$1
+    echo "Here are the available OCI notification topics"
+    oci ons topic list --compartment-id ${compartmentid} --all --output table --query 'data[*].{Name:name,TopicID:"topic-id"}'
+    read -p "OCI Notification TopicID ?:" onstopicid
+    read -p "Devops Project Name ? : " prjname
+    oci devops project create --compartment-id ${compartmentid} --name ${prjname} --notification-config '{"topicId":"'${onstopicid}'"}' --description "Project ${prjname}" --output table 
 
 }
 
 oci_prj_menu(){
 
-    compartmentid=$1
+    echo "Here is the available compartments"
+    oci iam compartment  list --query "data[*].{Name:name,ID:id}" --output table
+    read -p "OCI Compartment OCID ?:" compartmentid
+    OCI Devops Project menu - ${compartmentid}    
     echo -ne "
     OCI Devops PROJECT menu - Compartment ID : $1
     $(ColorGreen '1)') List projects.
@@ -70,12 +83,10 @@ oci_prj_menu(){
 }
 
 main_menu(){
-echo "Here is the available compartments"
-oci iam compartment  list --query "data[*].{Name:name,ID:id}" --output table
-read -p "OCI Compartment OCID ?:" compartmentid
+
 
 echo -ne "
-OCI Devops Quick menu - Compartment ID : $1
+OCI Devops Quick menu 
 $(ColorGreen '1)') devops project
 $(ColorGreen '2)') build pipeline
 $(ColorGreen '3)') deploy pipeline
@@ -85,14 +96,14 @@ $(ColorGreen '0)') Exit
 $(ColorBlue 'Choose an option:') "
         read choice
         case $choice in
-	        1) oci_prj_menu $compartmentid ; main_menu ;;
-	        2) oci_build ; main_menu ;;
-	        3) oci_deploy ; main_menu ;;
-	        4) oci_policies ; main_menu ;;
-	        5) all_checks ; main_menu ;;
-		0) exit 0 ;;
-		*) echo -e "Invalid"
+                1) oci_prj_menu ; main_menu ;;
+                2) oci_build ; main_menu ;;
+                3) oci_deploy ; main_menu ;;
+                4) oci_policies ; main_menu ;;
+                5) all_checks ; main_menu ;;
+                0) exit 0 ;;
+                *) echo -e "Invalid"
         esac
 }
 
-main_menu 
+main_menu
