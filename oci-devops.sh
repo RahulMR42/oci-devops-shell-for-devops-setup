@@ -40,9 +40,8 @@ oci_prj_menu(){
     echo "Here is the available compartments"
     oci iam compartment  list --query "data[*].{Name:name,ID:id}" --output table
     read -p "OCI Compartment OCID ?:" compartmentid
-    OCI Devops Project menu - ${compartmentid}    
     echo -ne "
-    OCI Devops PROJECT menu - Compartment ID : $1
+    OCI Devops PROJECT menu - Compartment ID : $compartmentid
     $(ColorGreen '1)') List projects.
     $(ColorGreen '2)') Create project.
     $(ColorGreen '100)') Back to main.
@@ -68,10 +67,9 @@ oci_build_menu(){
 
     echo "Here is the available compartments"
     oci iam compartment  list --query "data[*].{Name:name,ID:id}" --output table
-    read -p "OCI Compartment OCID ?:" compartmentid
-    OCI Devops Build menu - ${compartmentid}    
+    read -p "OCI Compartment OCID ?:" compartmentid  
     echo -ne "
-    OCI Devops BUILD menu - Compartment ID : $1
+    OCI Devops BUILD menu - Compartment ID : $compartmentid
     $(ColorGreen '1)') List build pipelines.
     $(ColorGreen '2)') Create build pipelines.
     $(ColorGreen '100)') Back to main.
