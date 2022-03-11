@@ -21,7 +21,7 @@ ColorBlue(){
 
 list_projects(){
     compartmentid=$1
-    oci devops project list --compartment-id $compartmentid --all --query 'data.items' --output table
+    oci devops project list --compartment-id $compartmentid --all --query 'data.items[*].{ID:id,name:name,description:description,"notification-config":"notification-config"}' --output table
 
 }
 
@@ -59,6 +59,11 @@ oci_prj_menu(){
 
 }
 
+list_buildpipelines(){
+    compartmentid=$1
+    oci devops build-pipeline list  --compartment-id $compartmentid --all --query 'data.items[*].{ID:id,name:"display-name","project-id":"project-id",description:description,"lifecycle-state":"lifecycle-state"}' --output table
+    }
+
 oci_build_menu(){
 
     echo "Here is the available compartments"
@@ -66,7 +71,7 @@ oci_build_menu(){
     read -p "OCI Compartment OCID ?:" compartmentid
     OCI Devops Build menu - ${compartmentid}    
     echo -ne "
-    OCI Devops PROJECT menu - Compartment ID : $1
+    OCI Devops BUILD menu - Compartment ID : $1
     $(ColorGreen '1)') List build pipelines.
     $(ColorGreen '2)') Create build pipelines.
     $(ColorGreen '100)') Back to main.
@@ -74,8 +79,38 @@ oci_build_menu(){
     $(ColorBlue 'Choose an option:') "
             read choice
             case $choice in
-                1) list_buildpipelines $compartmentid ; oci_prj_menu ;;
-                2) create_project $compartmentid;  oci_prj_menu;;
+                1) list_buildpipelines $compartmentid ; oci_build_menu ;;
+                2) create_buildpipeline $compartmentid;  oci_build_menu;;
+                100) main_menu ;;
+            0) exit 0 ;;
+            *) echo -e "Invalid"
+            esac
+
+}
+
+
+list_deploypipelines(){
+    compartmentid=$1
+    oci devops deploy-pipeline list  --compartment-id $compartmentid --all --query 'data.items[*].{ID:id,name:"display-name","project-id":"project-id",description:description,"lifecycle-state":"lifecycle-state"}' --output table
+    }
+
+oci_deploy_menu(){
+
+    echo "Here is the available compartments"
+    oci iam compartment  list --query "data[*].{Name:name,ID:id}" --output table
+    read -p "OCI Compartment OCID ?:" compartmentid
+    OCI Devops Deploy menu - ${compartmentid}    
+    echo -ne "
+    OCI Devops DEPLOYMENT menu - Compartment ID : $1
+    $(ColorGreen '1)') List deploy pipelines.
+    $(ColorGreen '2)') Create deploy pipelines.
+    $(ColorGreen '100)') Back to main.
+    $(ColorGreen '0)') exit.
+    $(ColorBlue 'Choose an option:') "
+            read choice
+            case $choice in
+                1) list_deploypipelines $compartmentid ; oci_deploy_menu ;;
+                2) create_deploypipeline $compartmentid;  oci_deploy_menu;;
                 100) main_menu ;;
             0) exit 0 ;;
             *) echo -e "Invalid"
@@ -99,7 +134,7 @@ $(ColorBlue 'Choose an option:') "
         case $choice in
                 1) oci_prj_menu ; main_menu ;;
                 2) oci_build_menu ; main_menu ;;
-                3) oci_deploy ; main_menu ;;
+                3) oci_deploy_menu ; main_menu ;;
                 4) oci_policies ; main_menu ;;
                 5) all_checks ; main_menu ;;
                 0) exit 0 ;;
